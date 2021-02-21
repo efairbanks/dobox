@@ -16,5 +16,4 @@ provider "digitalocean" {
 
 data "digitalocean_ssh_key" "terraform" {
   name = "terraform"
-  public_key = file("./id_rsa.pub")
 }
