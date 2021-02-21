@@ -19,8 +19,8 @@ resource "digitalocean_droplet" "www-1" {
       "export PATH=$PATH:/usr/bin",
       "sudo add-apt-repository universe",
       "sudo apt-get update",
-      "sudo apt install nginx libnginx-mod-rtmp",
-
+      "sudo apt install nginx libnginx-mod-rtmp wget",
+      ""
       # install nginx
       #"sudo apt-get update",
       #"sudo apt-get -y install docker.io",
