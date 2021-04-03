@@ -38,8 +38,8 @@ cp ../nginx-core/nginx.conf /usr/local/nginx/conf
 cp ../nginx-core/nginx-osp.service /etc/systemd/system/osp-edge.service
 
 # Setup Configuration with IP
-sed -i "s/#allow publish CHANGEME/allow publish $ipaddress/g" /usr/local/nginx/conf/osp-rtmp.conf
-sed -i "s/#allow CHANGEME/allow $ipaddress/g" /usr/local/nginx/conf/osp-edge-servers.conf
+sed -i "s/#allow publish CHANGEME/allow publish $ipaddress/g" /usr/local/nginx/conf/services/osp-edge-rtmp.conf
+sed -i "s/#allow CHANGEME/allow $ipaddress/g" /usr/local/nginx/conf/servers/osp-edge-servers.conf
 
 # Enable SystemD
 

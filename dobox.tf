@@ -37,10 +37,10 @@ resource "digitalocean_droplet" "stream" {
 
 resource "digitalocean_domain" "ospedge" {
   name       = "ospedge.erisfairbanks.com"
-  ip_address = digitalocean_droplet.ospedge-test.ipv4_address
+  ip_address = digitalocean_droplet.ospedge2.ipv4_address
 }
 
-resource "digitalocean_droplet" "ospedge-test" {
+resource "digitalocean_droplet" "ospedge2" {
   image = "ubuntu-18-04-x64"
   name = "dobox"
   region = "nyc1"
@@ -63,7 +63,8 @@ resource "digitalocean_droplet" "ospedge-test" {
       "cd flask-nginx-rtmp-manager/installs/osp-edge",
       "rm setup-ospEdge.sh",
       "wget https://raw.githubusercontent.com/efairbanks/dobox/master/setup-ospEdge.sh",
-      "chmod +x setup-ospEdge.sh"
+      "chmod +x setup-ospEdge.sh",
+      "sudo bash setup-ospEdge.sh <<< 'edge1.commie.cafe'"
       /*
       "cp setup/nginx/servers/osp-servers.conf .",
       "cp setup/nginx/services/osp-rtmp.conf .",
