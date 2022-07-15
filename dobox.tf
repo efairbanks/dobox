@@ -37,10 +37,11 @@ resource "digitalocean_droplet" "erisfairbanks" {
 
 resource "digitalocean_domain" "cybox" {
   name       = "cybox.erisfairbanks.com"
-  ip_address = digitalocean_droplet.cybox.ipv4_address
+  ip_address = length(digitalocean_droplet.cybox) > 0 ? digitalocean_droplet.cybox[0].ipv4_address : digitalocean_droplet.erisfairbanks.ipv4_address
 }
 
 resource "digitalocean_droplet" "cybox" {
+  count = 0
   image = "ubuntu-18-04-x64"
   name = "cybox"
   region = "nyc1"
@@ -64,20 +65,23 @@ resource "digitalocean_droplet" "cybox" {
       "sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable'",
       "sudo apt update",
       "apt-cache policy docker-ce",
-      "sudo apt install -y docker-ce"
+      "sudo apt install -y docker-ce",
+      "git clone https://github.com/efairbanks/cybox.git",
+      "cd cybox",
+      "./deploy.sh"
     ]
   }
 }
 
-/*
 resource "digitalocean_domain" "stream" {
-  name       = "backupstream.erisfairbanks.com"
-  ip_address = digitalocean_droplet.stream.ipv4_address
+  name       = "stream.erisfairbanks.com"
+  ip_address = length(digitalocean_droplet.stream) > 0 ? digitalocean_droplet.stream[0].ipv4_address : digitalocean_droplet.erisfairbanks.ipv4_address
 }
 
 resource "digitalocean_droplet" "stream" {
+  count = 1
   image = "ubuntu-18-04-x64"
-  name = "dobox"
+  name = "stream"
   region = "nyc1"
   size = "s-2vcpu-2gb"
   private_networking = true
@@ -93,13 +97,14 @@ resource "digitalocean_droplet" "stream" {
   }
   provisioner "remote-exec" {
     inline = [
-      "export PATH=$PATH:/usr/bin",
-      "sudo add-apt-repository universe",
-      "sudo apt-get update",
-      "sudo apt install -y nginx libnginx-mod-rtmp wget",
-      "wget https://raw.githubusercontent.com/efairbanks/dobox/master/nginx_additions.conf",
-      "sudo cat nginx_additions.conf >> /etc/nginx/nginx.conf",
-      "sudo systemctl restart nginx"
+      "sudo apt update",
+      "sudo apt install -y apt-transport-https ca-certificates curl software-properties-common",
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+      "sudo add-apt-repository 'deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable'",
+      "sudo apt update",
+      "apt-cache policy docker-ce",
+      "sudo apt install -y docker-ce",
+      "docker run -d -p 1935:1935 --name nginx-rtmp tiangolo/nginx-rtmp"
     ]
   }
-}*/
+}
